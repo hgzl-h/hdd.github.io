@@ -20,13 +20,13 @@ var S = {
 
     S.Drawing.init('.canvas');
     document.body.classList.add('body--ready');
-
+    
     if (i !== -1) {
       S.UI.simulate(decodeURI(action).substring(i + 3));
     } else {
       S.UI.simulate('|#countdown 3||祝|小可爱|梦想成真|真美年华|天天|轻松愉快|快快乐乐|#rectangle|');
     }
-
+    
     S.Drawing.loop(function () {
       S.Shape.render();
     });
@@ -57,27 +57,27 @@ S.Drawing = (function () {
         S.Drawing.adjustCanvas();
       });
     },
-
+    
     loop: function (fn) {
       renderFn = !renderFn ? fn : renderFn;
       this.clearFrame();
       renderFn();
       requestFrame.call(window, this.loop.bind(this));
     },
-
+    
     adjustCanvas: function () {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     },
-
+    
     clearFrame: function () {
       context.clearRect(0, 0, canvas.width, canvas.height);
     },
-
+    
     getArea: function () {
       return { w: canvas.width, h: canvas.height };
     },
-
+    
     drawCircle: function (p, c) {
       context.fillStyle = c.render();
       context.beginPath();
@@ -126,7 +126,7 @@ S.UI = (function () {
       interval = setInterval(function () {
         currentAction = reverse ? currentAction - 1 : currentAction + 1;
         fn(currentAction);
-
+    
         if ((!reverse && max && currentAction === max) || (reverse && currentAction === 0)) {
           clearInterval(interval);
         }
@@ -150,17 +150,17 @@ S.UI = (function () {
     sequence = typeof(value) === 'object' ? value : sequence.concat(value.split('|'));
     // input.value = '';
     // checkInputWidth();
-
+    
     timedAction(function (index) {
       current = sequence.shift();
       action = getAction(current);
       value = getValue(current);
-
+    
       switch (action) {
         case 'countdown':
           value = parseInt(value) || 10;
           value = value > 0 ? value : 10;
-
+    
           timedAction(function (index) {
             if (index === 0) {
               if (sequence.length === 0) {
@@ -173,23 +173,23 @@ S.UI = (function () {
             }
           }, 1000, value, true);
           break;
-
+    
         case 'rectangle':
           value = value && value.split('x');
           value = (value && value.length === 2) ? value : [maxShapeSize, maxShapeSize / 2];
-
+    
           S.Shape.switchShape(S.ShapeBuilder.rectangle(Math.min(maxShapeSize, parseInt(value[0])), Math.min(maxShapeSize, parseInt(value[1]))));
           break;
-
+    
         case 'circle':
           value = parseInt(value) || maxShapeSize;
           value = Math.min(value, maxShapeSize);
           S.Shape.switchShape(S.ShapeBuilder.circle(value));
           break;
-
+    
         case 'time':
           var t = formatTime(new Date());
-
+    
           if (sequence.length > 0) {
             S.Shape.switchShape(S.ShapeBuilder.letter(t));
           } else {
@@ -202,7 +202,7 @@ S.UI = (function () {
             }, 1000);
           }
           break;
-
+    
         default:
           S.Shape.switchShape(S.ShapeBuilder.letter(current[0] === cmd ? 'What?' : current));
       }
@@ -233,16 +233,16 @@ S.UI = (function () {
         performAction(input.value);
       }
     });
-
+    
     // input.addEventListener('input', checkInputWidth);
     // input.addEventListener('change', checkInputWidth);
     // input.addEventListener('focus', checkInputWidth);
-
+    
     // help.addEventListener('click', function (e) {
     //   overlay.classList.toggle('overlay--visible');
     //   overlay.classList.contains('overlay--visible') && reset(true);
     // });
-
+    
     // commands.addEventListener('click', function (e) {
     //   var el,
     //       info,
@@ -278,7 +278,7 @@ S.UI = (function () {
     //     }
     //   }
     // });
-
+    
     canvas.addEventListener('click', function (e) {
       overlay.classList.remove('overlay--visible');
     });
@@ -321,12 +321,12 @@ S.UI.Tabs = (function () {
         for (var t = 0; t < triggers.length; t++) {
           triggers[t].classList.remove('tabs-label--active');
           panels[t].classList.remove('tabs-panel--active');
-
+    
           if (el === triggers[t]) {
             index = t;
           }
         }
-
+    
         activate(index);
       }
     });
@@ -411,7 +411,7 @@ S.Dot.prototype = {
       this.p.y = n.y;
       return true;
     }
-
+    
     if (d > 1) {
       this.p.x -= ((dx / d) * e);
       this.p.y -= ((dy / d) * e);
@@ -422,7 +422,7 @@ S.Dot.prototype = {
         return true;
       }
     }
-
+    
     return false;
   },
 
@@ -448,7 +448,7 @@ S.Dot.prototype = {
         }
       }
     }
-
+    
     d = this.p.a - this.t.a;
     this.p.a = Math.max(0.1, this.p.a - (d * 0.05));
     d = this.p.z - this.t.z;
@@ -508,22 +508,22 @@ S.ShapeBuilder = (function () {
           x: x,
           y: y
         }));
-
+    
         w = x > w ? x : w;
         h = y > h ? y : h;
         fx = x < fx ? x : fx;
         fy = y < fy ? y : fy;
       }
-
+    
       x += gap;
-
+    
       if (x >= shapeCanvas.width) {
         x = 0;
         y += gap;
         p += gap * 4 * shapeCanvas.width;
       }
     }
-
+    
     return { dots: dots, w: w + fx, h: h + fy };
   }
 
@@ -553,14 +553,14 @@ S.ShapeBuilder = (function () {
         shapeContext.drawImage(this, 0, 0, a.h * 0.6, a.h * 0.6);
         callback(processCanvas());
       };
-
+    
       image.onerror = function () {
         callback(S.ShapeBuilder.letter('What?'));
       }
-
+    
       image.src = url;
     },
-
+    
     circle: function (d) {
       var r = Math.max(0, d) / 2;
       shapeContext.clearRect(0, 0, shapeCanvas.width, shapeCanvas.height);
@@ -568,30 +568,30 @@ S.ShapeBuilder = (function () {
       shapeContext.arc(r * gap, r * gap, r * gap, 0, 2 * Math.PI, false);
       shapeContext.fill();
       shapeContext.closePath();
-
+    
       return processCanvas();
     },
-
+    
     letter: function (l) {
       var s = 0;
-
+    
       setFontSize(fontSize);
       s = Math.min(fontSize,
                   (shapeCanvas.width / shapeContext.measureText(l).width) * 0.8 * fontSize,
                   (shapeCanvas.height / fontSize) * (isNumber(l) ? 1 : 0.45) * fontSize);
       setFontSize(s);
-
+    
       shapeContext.clearRect(0, 0, shapeCanvas.width, shapeCanvas.height);
       shapeContext.fillText(l, shapeCanvas.width / 2, shapeCanvas.height / 2);
-
+    
       return processCanvas();
     },
-
+    
     rectangle: function (w, h) {
       var dots = [],
           width = gap * w,
           height = gap * h;
-
+    
       for (var y = 0; y < height; y += gap) {
         for (var x = 0; x < width; x += gap) {
           dots.push(new S.Point({
@@ -600,7 +600,7 @@ S.ShapeBuilder = (function () {
           }));
         }
       }
-
+    
       return { dots: dots, w: width, h: height };
     }
   };
@@ -634,30 +634,30 @@ S.Shape = (function () {
         }
       }
     },
-
+    
     switchShape: function (n, fast) {
       var size,
           a = S.Drawing.getArea();
-
+    
       width = n.w;
       height = n.h;
-
+    
       compensate();
-
+    
       if (n.dots.length > dots.length) {
         size = n.dots.length - dots.length;
         for (var d = 1; d <= size; d++) {
           dots.push(new S.Dot(a.w / 2, a.h / 2));
         }
       }
-
+    
       var d = 0,
           i = 0;
-
+    
       while (n.dots.length > 0) {
         i = Math.floor(Math.random() * n.dots.length);
         dots[d].e = fast ? 0.25 : (dots[d].s ? 0.14 : 0.11);
-
+    
         if (dots[d].s) {
           dots[d].move(new S.Point({
             z: Math.random() * 20 + 10,
@@ -670,7 +670,7 @@ S.Shape = (function () {
             h: fast ? 18 : 30
           }));
         }
-
+    
         dots[d].s = true;
         dots[d].move(new S.Point({
           x: n.dots[i].x + cx,
@@ -679,11 +679,11 @@ S.Shape = (function () {
           z: 5,
           h: 0
         }));
-
+    
         n.dots = n.dots.slice(0, i).concat(n.dots.slice(i + 1));
         d++;
       }
-
+    
       for (var i = d; i < dots.length; i++) {
         if (dots[i].s) {
           dots[i].move(new S.Point({
@@ -691,7 +691,7 @@ S.Shape = (function () {
             a: Math.random(),
             h: 20
           }));
-
+    
           dots[i].s = false;
           dots[i].e = 0.04;
           dots[i].move(new S.Point({
@@ -704,7 +704,7 @@ S.Shape = (function () {
         }
       }
     },
-
+    
     render: function () {
       for (var d = 0; d < dots.length; d++) {
         dots[d].render();
