@@ -11,14 +11,13 @@ body{
     background: url("img/R-C.jpg");
 }
 
-
 #bigdiv{
-
-top:0;
-left:0;
-width:100%;
-min-height:100%;
-height:auto;
+position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
 }
 
 
@@ -112,6 +111,8 @@ h1:before {
 
 <style type="text/css">
 
+
+
 table {
      /* 字体颜色 */
     color: #ffe392;
@@ -121,6 +122,7 @@ table {
     /* 宽比例 */
     width: 50%;
 }
+
 .pinyin {
     height: 20px;
     /* 字母间距 */
@@ -188,7 +190,13 @@ button:active {
   </h1>
 </div> 
 
-<div id="bigdiv" style="position:absolute;top:0;left:0;z-index:99999;">
+<div id="bigdiv" style="position:absolute;width:100%;height:100%;z-index:99999;">
+<div id="bigdiv1" style="position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;">
 <table id ="table">
     <tr>
         <th class="pinyin" id="pinyin1">xīn</th>
@@ -203,6 +211,7 @@ button:active {
         <td id="jeskson4">乐</td>
     </tr>
 </table>
+
  
 <h2 id="dadaEnglish">(新年快乐)</h2>
 
@@ -210,6 +219,7 @@ button:active {
    <button type="button" id="button">
     <p>新年现金</p>
 </button>
+</div>
 </div>
 </div>
 
@@ -226,6 +236,23 @@ button:active {
   </div>
 </div>
 <script>
+
+reset();
+
+window.onresize = function () {
+
+reset();
+
+}
+
+function reset() {
+
+var top = (window.innerHeight - document.getElementById("table").offsetHeight*2)/2;
+
+document.getElementById("table").style.paddingTop=top+'px';
+
+}
+
 function initVars(){
 
 	pi=Math.PI;
