@@ -171,7 +171,7 @@ S.UI = (function () {
             } else {
               S.Shape.switchShape(S.ShapeBuilder.letter(index), true);
             }
-          }, 1000, value, true);
+          }, 2000, value, true);
           break;
     
         case 'rectangle':
@@ -206,7 +206,7 @@ S.UI = (function () {
         default:
           S.Shape.switchShape(S.ShapeBuilder.letter(current[0] === cmd ? 'What?' : current));
       }
-    }, 3000, sequence.length);
+    }, 4000, sequence.length);
   }
 
   function checkInputWidth(e) {
